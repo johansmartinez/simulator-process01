@@ -9,6 +9,8 @@ function ProcessProvider({children}) {
     const [processes, setProcesses] = useState([]);
     const [cont, setCont] = useState(0);
 
+    const [logs, setLogs] = useState([]);
+
 
     const [manager, setManager] = useState([]);
 
@@ -22,6 +24,11 @@ function ProcessProvider({children}) {
             else return false;
         });
     };
+
+    const writeLog=(text)=>{
+        logs.push(`(${Date.now()}): ${text}`)
+        setLogs([...logs]);
+    }
 
     const addProcess=(process)=>{
         process.id= cont;
@@ -51,6 +58,14 @@ function ProcessProvider({children}) {
         }
     }
     
+    const finalizeStatus=(idProcess)=>{
+        let si=processes.findIndex(prd=>prd.id===idProcess);
+        if (si>=0) {
+            let temp=[...processes];
+            temp[si].status='finish';
+            setProcesses(temp);
+        }
+    }
     const initialProcess=async ()=>{
         let processesD=await processes.filter(e=>e.status!== 'active' &&e.status!=='finish' );
         for (let ind = 0; ind< processesD.length; ind++){
@@ -61,6 +76,7 @@ function ProcessProvider({children}) {
                 const diff= parseInt(f.size) - parseInt(e.size)
                 if (diff>=0) {
                     activeStatus(e.id);
+                    writeLog(`El proceso: (id: ${e.id}, nombre: ${e.name},prioridad: ${e.priority}) ha ingresado a la cola`);
                     manager[f.manindex]={
                         id:e.id,
                         name: e.name,
@@ -81,6 +97,9 @@ function ProcessProvider({children}) {
                     setTimeout(() => {
                         let a=manager.findIndex(p=>p.id===e.id);
                         if (a>=0) {
+                            let proc=manager[a];
+                            finalizeStatus(proc?.id);
+                            writeLog(`El proceso: (id: ${proc.id}, nombre: ${proc.name}) ha finalizado su ejecución`);
                             manager[a]={
                                 ...manager[a],
                                 id:-1,
@@ -111,6 +130,8 @@ function ProcessProvider({children}) {
                             let processesD= processes.filter(e=>e.status!== 'active' &&e.status!=='finish' );
                             if (processesD.length>0) {
                                 initialProcess();
+                            }else{
+                                setManager([{id:-1, name:'libre', initial: 0, size:memory, final:memory}]);
                             }
                         }
                     }, e.time);
@@ -135,6 +156,7 @@ function ProcessProvider({children}) {
                 manager,
                 processes,
                 memory,
+                logs,
                 initializated, setInitializated
             }}
         >
