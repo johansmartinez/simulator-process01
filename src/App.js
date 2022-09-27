@@ -1,5 +1,7 @@
 import {Form} from './components/Form/Form';
-import {Representation} from './components/Representation/Representation';
+import {Graph} from './components/Graph/Graph';
+import {Logs} from './components/LogComponent/Logs';
+
 import { ProcessProvider } from './context/Process';
 
 
@@ -11,8 +13,13 @@ function App() {
       </div>
       <div className="row mt-4">
         <ProcessProvider>
-          <Form/>
-          <Representation/>
+          <div className='row'>
+            <Form/>
+            <Graph/>
+          </div>
+          <div className='row'>
+            <Logs/>
+          </div>
         </ProcessProvider>
       </div>
     </div>

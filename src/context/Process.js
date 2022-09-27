@@ -6,6 +6,8 @@ function ProcessProvider({children}) {
     const [memory, setMemory] = useState(0);
     
     const [initializated, setInitializated] = useState(false);
+    const [simulation, setSimulation] = useState(false);
+    const [finish, setFinish] = useState(false);
     const [processes, setProcesses] = useState([]);
     const [cont, setCont] = useState(0);
 
@@ -26,7 +28,7 @@ function ProcessProvider({children}) {
     };
 
     const writeLog=(text)=>{
-        logs.push(`(${Date.now()}): ${text}`)
+        logs.push(`${text}`)
         setLogs([...logs]);
     }
 
@@ -127,10 +129,11 @@ function ProcessProvider({children}) {
                             }else {
                                 setManager([...manager])
                             }
-                            let processesD= processes.filter(e=>e.status!== 'active' &&e.status!=='finish' );
+                            let processesD= processes.filter(e=>e.status=== 'wait');
                             if (processesD.length>0) {
                                 initialProcess();
                             }else{
+                                setFinish(true);
                                 setManager([{id:-1, name:'libre', initial: 0, size:memory, final:memory}]);
                             }
                         }
@@ -143,7 +146,18 @@ function ProcessProvider({children}) {
     }
 
     const simulate= async ()=>{
+        setSimulation(true);
         initialProcess();
+    }
+
+    const restart= async ()=>{
+        setFinish(false);
+        setInitializated(false);
+        setMemory(0);
+        setProcesses([]);
+        setManager([]);
+        setSimulation(false);
+        setLogs([]);
     }
 
     return(
@@ -156,7 +170,10 @@ function ProcessProvider({children}) {
                 manager,
                 processes,
                 memory,
+                simulation,
+                finish,
                 logs,
+                restart,
                 initializated, setInitializated
             }}
         >
