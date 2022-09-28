@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.7f7b01c7.css","mappings":"AAAA,WAII,gBAAiB,CAFjB,cAAe,CACf,gBAAiB,CAFjB,cAAe,CAIf,iBACJ","sources":["components/LogComponent/logs.css"],"sourcesContent":[".logs-area{\n    min-width: 100%;\n    max-width: 100%;\n    min-height: 400px;\n    max-height: 400px;\n    overflow-y: scroll;\n}"],"names":[],"sourceRoot":""}
