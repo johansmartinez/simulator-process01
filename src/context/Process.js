@@ -168,13 +168,13 @@ function ProcessProvider({children}) {
         setProcesses([]);
         setManager([]);
         setSimulation(false);
+        restartProcess();
         setLogs([]);
     }
 
     return(
         <ProcessContext.Provider
             value={{
-                restartProcess,
                 addProcess,
                 simulate,
                 initiallizateManager,
