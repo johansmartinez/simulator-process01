@@ -6,14 +6,14 @@ function Logs() {
 const {logs} = useContext(ProcessContext);
 
     return (
-        <div class="card col  mt-4">
-            <div class="card-header">
+        <div className="card col  mt-4">
+            <div className="card-header">
                 Logs
             </div>
-            <div class="card-body">
+            <div className="card-body">
                 {
-                    logs.map(e=>(
-                        <p>{e}</p>
+                    logs.map((e,i)=>(
+                        <p key={`logs-${i}`}>{e}</p>
                     ))
                 }
             </div>

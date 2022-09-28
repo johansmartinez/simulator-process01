@@ -29,7 +29,7 @@ function Form() {
         }
     }
     const handleAdd=()=>{
-        if (name&&time>0&&priority>=0&&size<=memory&&size>=0) {
+        if (name&&time>0&&priority>=0&&parseInt(size)<=memory&&size>=0) {
             addProcess({name,time,size:parseInt(size),priority});
             restartForm();
         }else{
@@ -79,10 +79,9 @@ function Form() {
                                 <div className="col mb-3">
                                     <label className="form-label">Tamaño (KiB):</label>
                                     <input type="number" className="form-control" value={size} onChange={e=>setSize(e.target.value)} placeholder="Ingrese un tamaño para el proceso"/>
-                                    { (!((memory-size)>=0)||(size<0))&&
-                                        <div class="alert alert-danger mt-2" role="alert">
-                                            {((memory-size)>=0)?'si':'no'}--{size}--
-                                            {(size<0)?'si':'no'}--
+                                    { ((parseInt(size)>memory)||(size<0))&&
+                                        <div className="alert alert-danger mt-2" role="alert">
+                                            {(size>memory)?'si':'no'}--
                                             Ingrese un número entre 0 y {memory} para el tamaño
                                         </div>
                                     }
@@ -91,7 +90,7 @@ function Form() {
                                     <label className="form-label">Tiempo (ms):</label>
                                     <input type="number" className="form-control" value={time} onChange={e=>setTime(e.target.value)} placeholder="Ingrese un tiempo para el proceso"/>
                                     { ((time<=0)||(time===null))&&
-                                        <div class="alert alert-danger mt-2" role="alert">
+                                        <div className="alert alert-danger mt-2" role="alert">
                                             Ingrese un tiempo mayor a 0
                                         </div>
                                     }
@@ -100,7 +99,7 @@ function Form() {
                                     <label className="form-label">Prioridad:</label>
                                     <input type="number" className="form-control" min={0} value={priority} onChange={e=>setPriority(e.target.value)} placeholder="Ingrese una prioridad"/>
                                     { ((priority<0)||(priority===null))&&
-                                        <div class="alert alert-danger mt-2" role="alert">
+                                        <div className="alert alert-danger mt-2" role="alert">
                                             Ingrese una prioridad positiva
                                         </div>
                                     }
@@ -138,13 +137,13 @@ function Form() {
                                     <td>{e.time}</td>
                                     <td>{e.priority}</td>
                                     {(e.status==='wait')&&
-                                        <span class="badge text-bg-secondary">{e.status}</span>
+                                        <span className="badge text-bg-secondary">{e.status}</span>
                                     }
                                     {(e.status==='active')&&
-                                        <span class="badge text-bg-primary">{e.status}</span>
+                                        <span className="badge text-bg-primary">{e.status}</span>
                                     }
                                     {(e.status==='finish')&&
-                                        <span class="badge text-bg-success">{e.status}</span>
+                                        <span className="badge text-bg-success">{e.status}</span>
                                     }
                                     
                                 </tr>

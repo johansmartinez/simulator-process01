@@ -16,6 +16,7 @@ function ProcessProvider({children}) {
 
     const [manager, setManager] = useState([]);
 
+    let stacked=0;
     const getFreeSpace=()=>{
         let temp=[...manager]
         return temp.filter((e, index)=>{
@@ -55,6 +56,7 @@ function ProcessProvider({children}) {
         let si=processes.findIndex(prd=>prd.id===idProcess);
         if (si>=0) {
             let temp=[...processes];
+            temp[si].finalization=Date.now();
             temp[si].status='active';
             setProcesses(temp);
         }
@@ -66,7 +68,9 @@ function ProcessProvider({children}) {
             let temp=[...processes];
             temp[si].status='finish';
             setProcesses(temp);
+            return si;
         }
+        return null;
     }
     const initialProcess=async ()=>{
         let processesD=await processes.filter(e=>e.status!== 'active' &&e.status!=='finish' );
@@ -100,8 +104,12 @@ function ProcessProvider({children}) {
                         let a=manager.findIndex(p=>p.id===e.id);
                         if (a>=0) {
                             let proc=manager[a];
-                            finalizeStatus(proc?.id);
-                            writeLog(`El proceso: (id: ${proc.id}, nombre: ${proc.name}) ha finalizado su ejecución`);
+                            let ip=finalizeStatus(proc?.id);
+                            if (ip>=0) {
+                                writeLog(`El proceso: (id: ${proc.id}, nombre: ${proc.name}) ha finalizado su ejecución, en cola: ${processes[ip]?.finalization - stacked } ms, total: ${processes[ip]?.finalization - stacked +parseInt(processes[ip]?.time)} ms`);
+                            }else{
+                                writeLog(`El proceso: (id: ${proc.id}, nombre: ${proc.name}) ha finalizado su ejecución`);
+                            }
                             manager[a]={
                                 ...manager[a],
                                 id:-1,
@@ -146,12 +154,15 @@ function ProcessProvider({children}) {
     }
 
     const simulate= async ()=>{
+
         setSimulation(true);
+        stacked=Date.now();
         initialProcess();
     }
 
     const restart= async ()=>{
         setFinish(false);
+        stacked=0;
         setInitializated(false);
         setMemory(0);
         setProcesses([]);
