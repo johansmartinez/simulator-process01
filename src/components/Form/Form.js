@@ -81,7 +81,6 @@ function Form() {
                                     <input type="number" className="form-control" value={size} onChange={e=>setSize(e.target.value)} placeholder="Ingrese un tamaño para el proceso"/>
                                     { ((parseInt(size)>memory)||(size<0))&&
                                         <div className="alert alert-danger mt-2" role="alert">
-                                            {(size>memory)?'si':'no'}--
                                             Ingrese un número entre 0 y {memory} para el tamaño
                                         </div>
                                     }
